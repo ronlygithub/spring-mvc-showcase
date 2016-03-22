@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SimpleController {
 
 	@RequestMapping("/simple")
-	public @ResponseBody String simple() {
+	public @ResponseBody String simple() throws InterruptedException {
+		Thread.sleep(5000);
+		System.out.println("---------------"+Thread.currentThread().getName()+"-----------------");
 		return "Hello world!";
 	}
 

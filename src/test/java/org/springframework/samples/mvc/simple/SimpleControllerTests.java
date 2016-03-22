@@ -11,11 +11,16 @@ public class SimpleControllerTests {
 
 	@Test
 	public void simple() throws Exception {
-		standaloneSetup(new SimpleController()).build()
+		for (int i = 0; i < 50; i++) {
+			
+			standaloneSetup(new SimpleController()).build()
 			.perform(get("/simple"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType("text/plain;charset=ISO-8859-1"))
 			.andExpect(content().string("Hello world!"));
+			System.out.println("---------------"+i+"-----------------");
+		}
+		
 	}
 
 }

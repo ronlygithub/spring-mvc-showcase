@@ -1,7 +1,13 @@
 package org.springframework.samples.mvc.async;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.samples.app.pojo.User;
+import org.springframework.samples.app.service.IUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,15 +19,17 @@ import org.springframework.web.context.request.async.WebAsyncTask;
 @Controller
 @RequestMapping("/async/callable")
 public class CallableController {
-
-
+	@Resource
+	IUserService userService;
 	@RequestMapping("/response-body")
-	public @ResponseBody Callable<String> callable() {
+	public @ResponseBody Callable<String> callable(final HttpServletResponse response) {
 
 		return new Callable<String>() {
 			@Override
 			public String call() throws Exception {
-				Thread.sleep(2000);
+//				Thread.sleep(2000);
+				User userById = userService.getUserById(1001);
+				System.out.println(userById.getName());
 				return "Callable result";
 			}
 		};
@@ -43,7 +51,7 @@ public class CallableController {
 
 	@RequestMapping("/exception")
 	public @ResponseBody Callable<String> callableWithException(
-			final @RequestParam(required=false, defaultValue="true") boolean handled) {
+			final @RequestParam(required=false, defaultValue="true") boolean handled,final HttpServletResponse response) {
 
 		return new Callable<String>() {
 			@Override
@@ -51,9 +59,10 @@ public class CallableController {
 				Thread.sleep(2000);
 				if (handled) {
 					// see handleException method further below
-					throw new IllegalStateException("Callable error");
+					throw new IllegalStateException("Callable error");					
 				}
 				else {
+					response.setStatus(506);
 					throw new IllegalArgumentException("Callable error");
 				}
 			}
@@ -75,9 +84,16 @@ public class CallableController {
 	}
 
 	@ExceptionHandler
-	@ResponseBody
+	@ResponseBody	
 	public String handleException(IllegalStateException ex) {
 		return "Handled exception: " + ex.getMessage();
+	}
+	
+	@ExceptionHandler
+	public void handleE(IllegalArgumentException ex, HttpServletResponse response) throws IOException{
+		response.getOutputStream().write("absdfs".getBytes());
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 
 }
