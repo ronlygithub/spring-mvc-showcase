@@ -1,2 +1,0 @@
-0000000000000000000000000000000000000000 f7a2e9d38b1d0a2087c751522889c02de332bcaf ronly <Administrator@WIN-UA03SGO69V8.(none)> 1458565361 +0800	clone: from git://github.com/SpringSource/spring-mvc-showcase.git
-f7a2e9d38b1d0a2087c751522889c02de332bcaf 1ebd04f8e871a37893aac04c24e053c0af34582e duanmh <menghuaduan@126.com> 1458665098 +0800	commit: spring-mvc 异步读取数据库
